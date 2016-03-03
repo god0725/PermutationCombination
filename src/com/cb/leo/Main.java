@@ -52,6 +52,8 @@ public class Main {
         String[] chooseBalls = new String[]{"A"};
 //        new CMethod().printComb2(allBall, 6);
 
+
+
         objResult temp = new CMethod().VarietyAceNgetR2(allBalls, 6, chooseBalls, 2);
         System.out.println(temp.getAllComb().length);
         System.out.println(temp.getWinComb().length);
