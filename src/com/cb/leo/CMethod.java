@@ -450,10 +450,11 @@ public class CMethod {
         String[] allComb = new CMethod().printComb3(allBall, result.length);
         List<String> allPerm = new ArrayList<String>();
         for(String child : allComb){
-            String[] temp = CPermutations.permPrefix(child.replace(" ", ""));
+            List<String> temp = CPermutations.permPrefix(child.replace(" ", ""));
             for(String subChild : temp){
                 allPerm.add(subChild);
             }
+            temp.clear();
         }
 
         List<String[]> allPermSplit = new ArrayList<String[]>();
@@ -506,10 +507,11 @@ public class CMethod {
             for(String Str : result){
                 child = child.replace(Str, "");
             }
-            String[] temp = CPermutations.permPrefix(child.replace(" ", ""));
+            List<String> temp = CPermutations.permPrefix(child.replace(" ", ""));
             for(String subChild : temp){
                 allPerm.add(result[0] + subChild);
             }
+            temp.clear();
         }
 
         total = allComb.length;
@@ -529,16 +531,17 @@ public class CMethod {
 
         objResult returnObj = new objResult();
         if(S == 1){
-            List<String> winPerm = new ArrayList<String>();
+            List<String> resultPerm = new ArrayList<String>();
             List<String> allPerm = new ArrayList<String>();
             String[] allComb = printComb3(allBalls, WinBalls);
 
             for(String subComb : allComb){
 
-                String[] perm = CPermutations.permPrefix(subComb.replace(" ", ""));
+                List<String> perm = CPermutations.permPrefix(subComb.replace(" ", ""));
                 for(String tempPerm : perm){
                     allPerm.add(tempPerm);
                 }
+                perm.clear();
 
                 boolean wrong = false;
                 for(String chooseBall : chooseBalls){
@@ -552,66 +555,69 @@ public class CMethod {
 
                 String beforeBall = "";
                 for(String chooseBall : chooseBalls){
-                    beforeBall += chooseBall + " ";
+                    beforeBall += chooseBall;
                 }
                 for(String chooseBall : chooseBalls){
                     subComb = subComb.replace(chooseBall + " ", "");
                 }
                 perm = CPermutations.permPrefix(subComb.replace(" ", ""));
                 for(String subChild : perm){
-                    winPerm.add(beforeBall + subChild);
+                    resultPerm.add(beforeBall + subChild);
                 }
+                perm.clear();
             }
 
-            returnObj.setWinComb(winPerm.toArray(new String[winPerm.size()]));
+            returnObj.setWinComb(resultPerm.toArray(new String[resultPerm.size()]));
             returnObj.setAllComb(allPerm.toArray(new String[allPerm.size()]));
-            winPerm.clear();
+            resultPerm.clear();
             allPerm.clear();
             return returnObj;
         } else if(S == 2){
-            List<String> winPerm = new ArrayList<String>();
+            List<String> resultPerm = new ArrayList<String>();
             List<String> allPerm = new ArrayList<String>();
 
-            String chooseBallsStr = Arrays.toString(chooseBalls).replaceAll("\\[", "").replaceAll("\\]", "").replace(",","");
-            String remBalls = removeUsedBalls(allBalls, chooseBallsStr);
+            String chooseBallsStr = Arrays.toString(chooseBalls).replaceAll("\\[", "").replaceAll("\\]", "").replace(",","").replace(" ", "");
+            String remBalls = removeUsedBalls(allBalls, Arrays.toString(chooseBalls).replaceAll("\\[", "").replaceAll("\\]", "").replace(",",""));
             String[] allComb = printComb3(remBalls.split(" "), WinBalls - chooseBalls.length - 1);
 
             for(String subComb : allComb){
-                String[] perm = CPermutations.permPrefix(subComb.replace(" ", ""));
-                for(String tempPerm : perm){
-                    tempPerm = tempPerm.replace("", " ");
-                    tempPerm = tempPerm.substring(1, tempPerm.length() - 1);
-                    String notUsedBalls = removeUsedBalls(remBalls.split(" "), tempPerm);
-                    for(String notUsedBall : notUsedBalls.split(" ")){
-                        winPerm.add(chooseBallsStr + tempPerm.replace(" ", "") + notUsedBall);
-                    }
-                }
-            }
-
-            allComb = printComb3(remBalls.split(" "), WinBalls - chooseBalls.length);
-            for(String subComb : allComb){
-                String[] perm = CPermutations.permPrefix(subComb.replace(" ", ""));
+                List<String> perm = CPermutations.permPrefix(subComb.replace(" ", ""));
                 for(String tempPerm : perm){
                     tempPerm = tempPerm.replace("", " ").substring(1);
                     String notUsedBalls = removeUsedBalls(remBalls.split(" "), tempPerm);
                     for(String notUsedBall : notUsedBalls.split(" ")){
-                        winPerm.add(chooseBallsStr + tempPerm.replace(" ", "") + notUsedBall);
+                        resultPerm.add(chooseBallsStr + tempPerm.replace(" ", "") + notUsedBall);
                     }
                 }
+                perm.clear();
             }
 
-            allComb = printComb3(allBalls, WinBalls - 1);
+            allComb = printComb3(remBalls.split(" "), WinBalls - chooseBalls.length);
+            for(String subComb : allComb){
+                List<String> perm = CPermutations.permPrefix(subComb.replace(" ", ""));
+                for(String tempPerm : perm){
+                    tempPerm = tempPerm.replace("", " ").substring(1);
+                    String notUsedBalls = removeUsedBalls(remBalls.split(" "), tempPerm);
+                    for(String notUsedBall : notUsedBalls.split(" ")){
+                        resultPerm.add(chooseBallsStr + tempPerm.replace(" ", "") + notUsedBall);
+                    }
+                }
+                perm.clear();
+            }
+
+            allComb = printComb3(allBalls, WinBalls);
             for(String subComb : allComb) {
 
-                String[] perm = CPermutations.permPrefix(subComb.replace(" ", ""));
+                List<String> perm = CPermutations.permPrefix(subComb.replace(" ", ""));
                 for (String tempPerm : perm) {
                     allPerm.add(tempPerm);
                 }
+                perm.clear();
             }
 
-            returnObj.setWinComb(winPerm.toArray(new String[winPerm.size()]));
+            returnObj.setWinComb(resultPerm.toArray(new String[resultPerm.size()]));
             returnObj.setAllComb(allPerm.toArray(new String[allPerm.size()]));
-            winPerm.clear();
+            resultPerm.clear();
             allPerm.clear();
             return returnObj;
         } else if(S == 3){
@@ -623,7 +629,7 @@ public class CMethod {
             String[] allComb = printComb3(remBalls.split(" "), WinBalls - 2);
 
             for(String subComb : allComb){
-                String[] perm = CPermutations.permPrefix(subComb.replace(" ", ""));
+                List<String> perm = CPermutations.permPrefix(subComb.replace(" ", ""));
                 for(String tempPerm : perm){
                     tempPerm = tempPerm.replace("", " ").substring(1);
                     String notUsedBalls = removeUsedBalls(remBalls.split(" "), tempPerm);
@@ -631,11 +637,12 @@ public class CMethod {
                         resultPerm.add(chooseBallsStr + tempPerm.replace(" ", "") + notUsedBall);
                     }
                 }
+                perm.clear();
             }
 
             allComb = printComb3(remBalls.split(" "), WinBalls - 1);
             for(String subComb : allComb){
-                String[] perm = CPermutations.permPrefix(subComb.replace(" ", ""));
+                List<String> perm = CPermutations.permPrefix(subComb.replace(" ", ""));
                 for(String tempPerm : perm){
                     tempPerm = tempPerm.replace("", " ").substring(1);
                     String notUsedBalls = removeUsedBalls(remBalls.split(" "), tempPerm);
@@ -643,15 +650,17 @@ public class CMethod {
                         resultPerm.add(chooseBallsStr + tempPerm.replace(" ", "") + notUsedBall);
                     }
                 }
+                perm.clear();
             }
 
             allComb = printComb3(allBalls, WinBalls);
             for(String subComb : allComb) {
 
-                String[] perm = CPermutations.permPrefix(subComb.replace(" ", ""));
+                List<String> perm = CPermutations.permPrefix(subComb.replace(" ", ""));
                 for (String tempPerm : perm) {
                     allPerm.add(tempPerm);
                 }
+                perm.clear();
             }
 
             returnObj.setWinComb(resultPerm.toArray(new String[resultPerm.size()]));

@@ -10,17 +10,7 @@ public class CPermutations {
 
     // print N! permutation of the characters of the string s (in order)
     public  static void perm1(String s) { perm1("", s); }
-    public static String[] permPrefix(String word) {
-        List<String> listPermPrefix = permPrefix("", word, new ArrayList<String>());
-        String[] returnArray = listPermPrefix.toArray(new String[listPermPrefix.size()]);
-
-        for(int i = 0; i < returnArray.length; i++){
-            returnArray[i] = returnArray[i].replace("", " ");
-            returnArray[i] = returnArray[i].substring(1, returnArray[i].length() - 1);
-        }
-
-        return returnArray;
-    }
+    public static List<String> permPrefix(String word) { return permPrefix("", word, new ArrayList<String>()); }
     private static void perm1(String prefix, String s) {
         int N = s.length();
         if (N == 0) System.out.println(prefix);
@@ -42,7 +32,6 @@ public class CPermutations {
                 permPrefix(prefix + word.charAt(i), word.substring(0, i) + word.substring(i + 1, N), permList);
             }
         }
-
         return permList;
     }
 
